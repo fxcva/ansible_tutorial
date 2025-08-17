@@ -1,0 +1,37 @@
+- name: install apache and php packages for alma linux
+  dnf:
+    name:
+     - httpd
+     - php
+    state: latest
+  when: ansible_distribution == "AlmaLinux"
+
+- name: start httpd on alma linux
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+  when: ansible_distribution == "AlmaLinux"
+
+- name: change e-mail address for admin
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^ServerAdmin'
+    line: ServerAdmin somebody@somewhere.net
+  when: ansible_distribution == "AlmaLinux"
+  register: httpd
+
+- name: restart httpd alma linux
+  service:
+    name: httpd
+    state: restarted
+  when: httpd.changed
+
+- name: copy default html file for site
+  copy:
+    src: default_site.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+

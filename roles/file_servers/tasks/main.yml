@@ -1,0 +1,8 @@
+- name: install mariadb package for alma linux
+  tags: mariadb, almalinux
+  dnf:
+    name:
+     - mariadb
+    state: latest
+  when: ansible_distribution == "AlmaLinux"
+
