@@ -1,0 +1,49 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (alma linux)
+    tags: always
+    dnf:
+      update_only: yes 
+      update_cache: yes
+    when: ansible_distribution == "AlmaLinux"
+
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: install apache and php packages for alma linux
+    tags: apache, php, almalinux
+    dnf:
+      name:
+       - httpd
+       - php
+      state: latest
+    when: ansible_distribution == "AlmaLinux"
+
+  - name: copy default html file for site 
+    tags: apache, apache2, httpd
+    copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
+
+- hosts: file_servers
+  become: true
+  tasks:
+
+  - name: install mariadb package for alma linux
+    tags: mariadb, almalinux
+    dnf:
+      name:
+       - mariadb
+      state: latest
+    when: ansible_distribution == "AlmaLinux"
+
+
