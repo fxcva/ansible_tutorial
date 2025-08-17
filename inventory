@@ -3,3 +3,6 @@
 
 [file_servers]
 172.16.183.141
+
+[workstations]
+172.16.183.140
